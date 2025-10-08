@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<div class="page-container">
+    {% include 'userbar.html' %}
+    <!-- MAIN CONTENT-->
+    <div class="main-content">
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="overview-wrap">
+                            <h2 class="title-1">Overview</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row m-t-25">
+
+                <!-- Categories -->
+                <div class="col-sm-3 col-lg-3">
+                    <div class="card shadow-sm border-0 text-center" style="border-radius: 15px; background: linear-gradient(135deg, #007bff, #00c6ff); color: white;">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fa fa-list fa-3x"></i>
+                            </div>
+                            <h2 class="fw-bold">{{ counts.categories|intcomma }}</h2>
+                            <p class="mb-0">Categories</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products -->
+                <div class="col-sm-3 col-lg-3">
+                    <div class="card shadow-sm border-0 text-center" style="border-radius: 15px; background: linear-gradient(135deg, #28a745, #a8e063); color: white;">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fa fa-shopping-basket fa-3x"></i>
+                            </div>
+                            <h2 class="fw-bold">{{ counts.products|intcomma }}</h2>
+                            <p class="mb-0">Products</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users -->
+                <div class="col-sm-3 col-lg-3">
+                    <div class="card shadow-sm border-0 text-center" style="border-radius: 15px; background: linear-gradient(135deg, #ffc107, #ff9800); color: white;">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fa fa-users fa-3x"></i>
+                            </div>
+                            <h2 class="fw-bold">{{ counts.users|intcomma }}</h2>
+                            <p class="mb-0">Users</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggestions -->
+                <div class="col-sm-3 col-lg-3">
+                    <div class="card shadow-sm border-0 text-center" style="border-radius: 15px; background: linear-gradient(135deg, #6f42c1, #b57edc); color: white;">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fa fa-lightbulb-o fa-3x"></i>
+                            </div>
+                            <h2 class="fw-bold">{{ counts.suggestions|intcomma }}</h2>
+                            <p class="mb-0">Suggestions</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+                <!-- Charts -->
+                <div class="row m-t-25">
+                    <div class="col-lg-6">
+                        <div class="au-card m-b-30">
+                            <div class="au-card-inner">
+                                <h3 class="title-2 m-b-40">Bar Chart</h3>
+                                <canvas id="barChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="au-card m-b-30">
+                            <div class="au-card-inner">
+                                <h3 class="title-2 m-b-40">Pie Chart</h3>
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascript %}
+<script>
+(function($){
+  try {
+    // Bar Chart
+    var ctx = document.getElementById("barChart");
+    if (ctx) {
+      ctx.height = 150;
+      var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ["Categories", "Products", "Users", "Suggestions"],
+          datasets: [
+            {
+              label: "Counts",
+              data: [{{ counts.categories }}, {{ counts.products }}, {{ counts.users }}, {{ counts.suggestions }}],
+              borderColor: "rgba(0, 123, 255, 0.9)",
+              borderWidth: 0,
+              backgroundColor: [
+                "rgba(0, 123, 255, 0.5)",
+                "rgba(0, 200, 83, 0.5)",
+                "rgba(255, 193, 7, 0.5)",
+                "rgba(111, 66, 193, 0.5)"
+              ]
+            }
+          ]
+        },
+        options: {
+          legend: { position: 'top', labels: { fontFamily: 'Poppins' }},
+          scales: {
+            xAxes: [{ ticks: { fontFamily: "Poppins" }}],
+            yAxes: [{ ticks: { beginAtZero: true, fontFamily: "Poppins" }}]
+          }
+        }
+      });
+    }
+
+    // Pie Chart
+    var ctx = document.getElementById("pieChart");
+    if (ctx) {
+      ctx.height = 200;
+      var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          datasets: [{
+            data: [{{ counts.categories }}, {{ counts.products }}, {{ counts.users }}, {{ counts.suggestions }}],
+            backgroundColor: [
+              "rgba(0, 123, 255,0.9)",
+              "rgba(0, 200, 83,0.7)",
+              "rgba(255, 193, 7,0.7)",
+              "rgba(111, 66, 193, 0.7)"
+            ]
+          }],
+          labels: ["Categories", "Products", "Users", "Suggestions"]
+        },
+        options: {
+          legend: { position: 'top', labels: { fontFamily: 'Poppins' }},
+          responsive: true
+        }
+      });
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+
+})(jQuery);
+</script>
+{% endblock %}
+{% endblock %}

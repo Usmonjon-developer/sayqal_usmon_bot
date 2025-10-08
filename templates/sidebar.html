@@ -1,0 +1,41 @@
+{% load static %}
+<!-- MENU SIDEBAR-->
+<aside class="menu-sidebar d-none d-lg-block">
+    <div class="logo">
+        <a href="{% url 'home_page' %}">
+            <img src="{% static 'images/icon/logo.png' %}" alt="Cool Admin" />
+        </a>
+    </div>
+    <div class="menu-sidebar__content js-scrollbar1">
+        <nav class="navbar-sidebar">
+            <ul class="list-unstyled navbar__list">
+                <li class="{% if request.resolver_match.url_name == 'home_page' %}active{% endif %}">
+                    <a href="{% url 'home_page' %}">
+                        <i class="fas fa-tachometer-alt"></i>Dashboard
+                    </a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'category_list' %}active{% endif %}">
+                    <a href="{% url 'category_list' %}">
+                        <i class="fas fa-list"></i>Category
+                    </a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'product_list' %}active{% endif %}">
+                    <a href="{% url 'product_list' %}">
+                        <i class="fas fa-box"></i>Product
+                    </a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'user_list' %}active{% endif %}">
+                    <a href="{% url 'user_list' %}">
+                        <i class="fas fa-users"></i>User
+                    </a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'suggestion_list' %}active{% endif %}">
+                    <a href="{% url 'suggestion_list' %}">
+                        <i class="fas fa-users"></i>Suggestion
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
+<!-- END MENU SIDEBAR-->
