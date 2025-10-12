@@ -23,6 +23,10 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    TYPE_CHOICES = [
+        ('l', 'liter'),
+        ('kg', 'kilogram')
+    ]
     name_uz = models.CharField(max_length=100, null=False, blank=False)
     name_ru = models.CharField(max_length=100, null=False, blank=False)
     name_en = models.CharField(max_length=100, null=False, blank=False)
@@ -32,6 +36,7 @@ class Product(models.Model):
     description_ru = models.TextField()
     description_en = models.TextField()
     image = models.ImageField(upload_to='product_images/')
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
 
     def __str__(self):
         return self.name_uz

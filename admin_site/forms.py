@@ -28,6 +28,7 @@ class ProductForm(forms.ModelForm):
             "description_ru": forms.Textarea(attrs={'class': 'form-control'}),
             "category": forms.Select(attrs={'class': 'form-control'}),
             "image": forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            "type": forms.Select(attrs={'class': 'form-control'}),
         }
 
 class UserForm(forms.ModelForm):

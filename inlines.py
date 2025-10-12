@@ -46,7 +46,13 @@ def inline_handler(update, context):
                 if len(data_sp) == 4:
                     query.message.delete()
                     carts = context.user_data.get("carts", {})
-                    carts[f"{data_sp[2]}"] = carts.get(f"{data_sp[2]}", 0) + int(data_sp[3])
+
+                    try:
+                        quantity = float(data_sp[3])
+                    except ValueError:
+                        quantity = 1  # agar xato bo‘lsa default qiymat 1 bo‘ladi
+
+                    carts[f"{data_sp[2]}"] = carts.get(f"{data_sp[2]}", 0) + quantity
                     context.user_data["carts"] = carts
 
                     categories = db.get_categories_by_parent()
@@ -57,7 +63,12 @@ def inline_handler(update, context):
                     total_price = 0
                     for cart, val in carts.items():
                         product = db.get_product_for_cart(int(cart))
-                        text += f"{val}x {product[f'name_{lang_code}']}\n"
+                        product_type = product.get("type", "").lower()  # l yoki kg
+                        if float(val).is_integer():
+                            amount_str = f"{int(val)} {product_type} ×"
+                        else:
+                            amount_str = f"{val} {product_type} ×"
+                        text += f"{amount_str} {product[f'name_{lang_code}']}\n"
                         total_price += product['price'] * val
 
                     text += f"\n{globals.ALL[db_user['lang_id']]}: {total_price}"
@@ -78,56 +89,122 @@ def inline_handler(update, context):
                               f"\n{globals.TEXT_PRODUCT_DESC[db_user['lang_id']]}" + \
                               product[f"description_{globals.LANGUAGE_CODE[db_user['lang_id']]}"]
 
-                    buttons = [
-                        [
-                            InlineKeyboardButton(
-                                text="1️⃣",
-                                callback_data=f"category_product_{data_sp[2]}_{1}"
-                            ),
-                            InlineKeyboardButton(
-                                text="2️⃣",
-                                callback_data=f"category_product_{data_sp[2]}_{2}"
-                            ),
-                            InlineKeyboardButton(
-                                text="3️⃣",
-                                callback_data=f"category_product_{data_sp[2]}_{3}"
-                            ),
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text="4️⃣",
-                                callback_data=f"category_product_{data_sp[2]}_{4}"
-                            ),
-                            InlineKeyboardButton(
-                                text="5️⃣",
-                                callback_data=f"category_product_{data_sp[2]}_{5}"
-                            ),
-                            InlineKeyboardButton(
-                                text="6️⃣",
-                                callback_data=f"category_product_{data_sp[2]}_{6}"
-                            ),
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text="7️⃣",
-                                callback_data=f"category_product_{data_sp[2]}_{7}"
-                            ),
-                            InlineKeyboardButton(
-                                text="8️⃣",
-                                callback_data=f"category_product_{data_sp[2]}_{8}"
-                            ),
-                            InlineKeyboardButton(
-                                text="9️⃣",
-                                callback_data=f"category_product_{data_sp[2]}_{9}"
-                            ),
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text="Back",
-                                callback_data=f"category_product_back_{product['category_id']}"
+                    if product.get("type") == "kg":
+                        buttons = []
+                        temp_row = []
+
+                        for i in range(1,10):
+                            weight = round(i * 0.1, 1)
+                            temp_row.append(
+                                InlineKeyboardButton(
+                                    text=f"{weight} kg",
+                                    callback_data=f"category_product_{data_sp[2]}_{weight}"
+                                )
                             )
+                            if len(temp_row) == 3:
+                                buttons.append(temp_row)
+                                temp_row = []
+                        if temp_row:
+                            buttons.append(temp_row)
+
+                        temp_row = []
+                        for i in range(1,10):
+                            weight = i
+                            temp_row.append(
+                                InlineKeyboardButton(
+                                    text=f"{weight} kg",
+                                    callback_data=f"category_product_{data_sp[2]}_{weight}"
+                                )
+                            )
+                            if len(temp_row) == 3:
+                                buttons.append(temp_row)
+                                temp_row = []
+                        if temp_row:
+                            buttons.append(temp_row)
+                    elif product["type"] == "l":
+                        buttons = []
+                        temp_row = []
+
+                        for i in range(1, 10):
+                            liter = round(i * 0.1, 1)
+                            temp_row.append(
+                                InlineKeyboardButton(
+                                    text=f"{liter} l",
+                                    callback_data=f"category_product_{data_sp[2]}_{liter}"
+                                )
+                            )
+                            if len(temp_row) == 3:
+                                buttons.append(temp_row)
+                                temp_row = []
+                        if temp_row:
+                            buttons.append(temp_row)
+
+                        temp_row = []
+                        for i in range(1, 5):
+                            liter = i
+                            temp_row.append(
+                                InlineKeyboardButton(
+                                    text=f"{liter} l",
+                                    callback_data=f"category_product_{data_sp[2]}_{liter}"
+                                )
+                            )
+                            if len(temp_row) == 3:
+                                buttons.append(temp_row)
+                                temp_row = []
+                        if temp_row:
+                            buttons.append(temp_row)
+                    else:
+                        buttons = [
+                            [
+                                InlineKeyboardButton(
+                                    text="1️⃣",
+                                    callback_data=f"category_product_{data_sp[2]}_{1}"
+                                ),
+                                InlineKeyboardButton(
+                                    text="2️⃣",
+                                    callback_data=f"category_product_{data_sp[2]}_{2}"
+                                ),
+                                InlineKeyboardButton(
+                                    text="3️⃣",
+                                    callback_data=f"category_product_{data_sp[2]}_{3}"
+                                ),
+                            ],
+                            [
+                                InlineKeyboardButton(
+                                    text="4️⃣",
+                                    callback_data=f"category_product_{data_sp[2]}_{4}"
+                                ),
+                                InlineKeyboardButton(
+                                    text="5️⃣",
+                                    callback_data=f"category_product_{data_sp[2]}_{5}"
+                                ),
+                                InlineKeyboardButton(
+                                    text="6️⃣",
+                                    callback_data=f"category_product_{data_sp[2]}_{6}"
+                                ),
+                            ],
+                            [
+                                InlineKeyboardButton(
+                                    text="7️⃣",
+                                    callback_data=f"category_product_{data_sp[2]}_{7}"
+                                ),
+                                InlineKeyboardButton(
+                                    text="8️⃣",
+                                    callback_data=f"category_product_{data_sp[2]}_{8}"
+                                ),
+                                InlineKeyboardButton(
+                                    text="9️⃣",
+                                    callback_data=f"category_product_{data_sp[2]}_{9}"
+                                ),
+                            ],
+                            [
+                                InlineKeyboardButton(
+                                    text="Back",
+                                    callback_data=f"category_product_back_{product['category_id']}"
+                                )
+                            ]
                         ]
-                    ]
+
 
                     image_path = os.path.join(settings.MEDIA_ROOT, str(product['image']))
 
@@ -215,14 +292,22 @@ def inline_handler(update, context):
                 total_price = 0
                 for cart, val in carts.items():
                     product = db.get_product_for_cart(int(cart))
-                    text += f"{val}x {product[f'name_{lang_code}']}\n"
+                    product_type = product.get("type", "").lower()  # 'kg' yoki 'l'
+
+                    # agar son butun bo‘lsa .0 chiqmasin
+                    if float(val).is_integer():
+                        amount_str = f"{int(val)} {product_type} ×"
+                    else:
+                        amount_str = f"{val} {product_type} ×"
+
+                    text += f"{amount_str} {product[f'name_{lang_code}']}\n"
                     total_price += product['price'] * val
 
                 text += f"\n{globals.ALL[db_user['lang_id']]}: {total_price}"
 
                 context.user_data.get('cart_text',text)
 
-                buttons.append([InlineKeyboardButton(text=f"{globals.BTN_KORZINKA}", callback_data="cart")])
+                buttons.append([InlineKeyboardButton(text=globals.BTN_KORZINKA[db_user['lang_id']], callback_data="cart")])
 
             else:
                 text = globals.TEXT_ORDER[db_user['lang_id']]

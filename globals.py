@@ -65,6 +65,17 @@ BTN_KORZINKA = {
     2: "🛍 Покупка товаров",
     3: "🛍 Shopping"
 }
+BOGLANISH = {
+    1: "Adminlar siz bilan tez orada bog‘lanishadi.\n"
+       "📍 Iltimos, yaxshi aloqa (antennasi kuchli) joyda turing.",
+
+    2: "Администраторы скоро свяжутся с вами.\n"
+       "📍 Пожалуйста, оставайтесь в месте с хорошим сигналом связи.",
+
+    3: "Admins will contact you shortly.\n"
+       "📍 Please stay in an area with a good signal."
+}
+
 BTN_COMMENTS = {
     1: "✍️ Fikr bildirish",
     2: "✍️ Комментарий",
@@ -206,9 +217,11 @@ RAHMAT = {
 
 ABOUT_COMPANY = {
     1: (
+        "<b>Restorant tipi:</b>\n"
+        "<i>Milliy taomlar -- Halol sertifikatiga ega<i/>"
         "<b>Ish soatlari:</b>\n"
         "Har kuni: 10:00 - 23:00\n\n"
-        "<b>Manzil:</b>\n"
+        "<b>Manzil (Google Maps):</b>\n"
         "<a href='http://bit.ly/485M7dp'>Google Maps orqali ko'rish</a>\n\n"
         "<b>Sayt:</b>\n"
         "<a href='https://restaurantsayqal.github.io/bukhara/'>Restaurant Sayqal</a>\n\n"
