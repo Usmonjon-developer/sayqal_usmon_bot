@@ -25,7 +25,8 @@ class Category(models.Model):
 class Product(models.Model):
     TYPE_CHOICES = [
         ('l', 'liter'),
-        ('kg', 'kilogram')
+        ('kg', 'kilogram'),
+        ('ta', 'ta')
     ]
     name_uz = models.CharField(max_length=100, null=False, blank=False)
     name_ru = models.CharField(max_length=100, null=False, blank=False)

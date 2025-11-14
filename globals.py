@@ -76,6 +76,18 @@ BOGLANISH = {
        "📍 Please stay in an area with a good signal."
 }
 
+ORDER_YES = {
+    1: "✅ Buyurtmangiz qabul qilindi! Tez orada siz bilan bog‘lanamiz.",
+    2: "✅ Ваш заказ принят! Администраторы скоро свяжутся с вами.",
+    3: "✅ Your order has been accepted! Our admins will contact you shortly."
+}
+
+ORDER_NO = {
+    1: "❌ Buyurtmangiz bekor qilindi.",
+    2: "❌ Ваш заказ был отменён.",
+    3: "❌ Your order has been cancelled."
+}
+
 BTN_COMMENTS = {
     1: "✍️ Fikr bildirish",
     2: "✍️ Комментарий",
@@ -218,7 +230,7 @@ RAHMAT = {
 ABOUT_COMPANY = {
     1: (
         "<b>Restorant tipi:</b>\n"
-        "<i>Milliy taomlar -- Halol sertifikatiga ega<i/>"
+        "<i>Milliy taomlar -- Halol sertifikatiga ega</i>\n\n"
         "<b>Ish soatlari:</b>\n"
         "Har kuni: 10:00 - 23:00\n\n"
         "<b>Manzil (Google Maps):</b>\n"
@@ -287,4 +299,9 @@ SEND_LOCATION = {
     1: "📍 Lokatsiya jo'nating",
     2: "📍 Отправить местоположение",
     3: "📍 Send location"
+}
+SAVATNI_TAHRIRLASH = {
+    1: "✏️ Savatchani tahrirlash",
+    2: "✏️ Редактировать корзину",
+    3: "✏️ Edit shopping cart"
 }

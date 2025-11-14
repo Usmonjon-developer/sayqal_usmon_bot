@@ -25,6 +25,12 @@ class Database:
         user = dict_fetchone(self.cur)
         return user
 
+    def get_user_by_id(self, user_id):
+        """Foydalanuvchini ID orqali olish"""
+        self.cur.execute("""SELECT * FROM user WHERE id = ?""", (user_id,))
+        user = dict_fetchone(self.cur)
+        return user
+
     # ------------------- CATEGORY METHODS -------------------
 
     def get_categories_by_parent(self, parent_id=None):
@@ -78,7 +84,7 @@ class Database:
             INSERT INTO "order"(user_id, status, payment_type, longitude, latitude, created_at)
             VALUES (?, ?, ?, ?, ?, ?)
             """,
-            (user_id, 1, payment_type, location.longitude, location.latitude, datetime.now())
+            (user_id, "pending", payment_type, location.longitude, location.latitude, datetime.now())
         )
         self.conn.commit()
 
@@ -95,9 +101,11 @@ class Database:
             )
         self.conn.commit()
 
+        return last_order  # bu MUHIM! order_id qaytariladi
+
     def get_user_orders(self, user_id):
         """Foydalanuvchining faol buyurtmalarini olish"""
-        self.cur.execute("""SELECT * FROM "order" WHERE user_id = ? AND status = 1""", (user_id,))
+        self.cur.execute("""SELECT * FROM "order" WHERE user_id = ? AND status = 'pending'""", (user_id,))
         return dict_fetchall(self.cur)
 
     def get_order_products(self, order_id):
@@ -116,6 +124,16 @@ class Database:
         )
         return dict_fetchall(self.cur)
 
+    def update_order_status(self, order_id, status):
+        """Buyurtma holatini yangilash"""
+        self.cur.execute("""UPDATE "order" SET status = ? WHERE id = ?""", (status, order_id))
+        self.conn.commit()
+
+    def get_order_by_id(self, order_id):
+        """Buyurtmani ID orqali olish"""
+        self.cur.execute("""SELECT * FROM "order" WHERE id = ?""", (order_id,))
+        return dict_fetchone(self.cur)
+
     # ------------------- SUGGESTION METHODS -------------------
 
     def create_suggestion(self, chat_id, message):
@@ -130,6 +148,23 @@ class Database:
         except Exception as e:
             print("❌ Xato:", e)
 
+    def get_user_active_orders(self, user_id):
+        """Foydalanuvchining barcha buyurtmalarini holati bilan olish"""
+        self.cur.execute("""
+            SELECT o.id, o.status, o.created_at, 
+                   p.name_uz, p.price, op.amount
+            FROM "order" o
+            INNER JOIN order_product op ON o.id = op.order_id
+            INNER JOIN product p ON op.product_id = p.id
+            WHERE o.user_id = ?
+            ORDER BY o.created_at DESC
+        """, (user_id,))
+        return dict_fetchall(self.cur)
+
+    def get_order(self, order_id):
+        """Buyurtmani ID orqali olish"""
+        self.cur.execute("""SELECT * FROM "order" WHERE id = ?""", (order_id,))
+        return dict_fetchone(self.cur)
 
 # ------------------- HELPERS -------------------
 
